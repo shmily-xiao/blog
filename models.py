@@ -95,7 +95,8 @@ class Post(db.Model):
     # many to many: post <==> tags
     # seconddary(次级)：会告知 SQLAlchemy 该 many to many 的关联保存在 posts_tags 表中
     # backref：声明表之间的关系是双向，帮助手册 help(db.backref)。
-    # 需要注意的是：在 one to many 中的 backref 是一个普通的对象，而在 many to many 中的 backref 是一个 List 对象。
+    # 需要注意的是：在 one to many 中的 backref 是一个普通的对象，
+    # 而在 many to many 中的 backref 是一个 List 对象。
     tags = db.relationship(
         'Tag',
         secondary=posts_tags,
@@ -118,7 +119,7 @@ class Comment(db.Model):
     name = db.Column(db.String(255))
     text = db.Column(db.Text())
     date = db.Column(db.DateTime())
-    post_id = db.Column(db.INTEGER,db.ForeignKey('posts.id'))
+    post_id = db.Column(db.INTEGER, db.ForeignKey('posts.id'))
 
     def __init__(self, name):
         self.name = name
