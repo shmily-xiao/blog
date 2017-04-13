@@ -114,7 +114,7 @@ class Post(db.Model):
 class Comment(db.Model):
     """Represent Proected comments"""
 
-    __tablename__='comments'
+    __tablename__ = 'comments'
     id = db.Column(db.INTEGER, primary_key=True)
     name = db.Column(db.String(255))
     text = db.Column(db.Text())
