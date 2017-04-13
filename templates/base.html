@@ -8,19 +8,24 @@
   <!-- Will be replace the page title -->
   <title>{% block title %}Home{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+{#  <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>#}
+
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+  <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
   <!-- Macro: `render paginate` -->
     <!--定义宏-->
     <!--agination: SQLAlchemy 的分页对象 flask_sqlalchemy.Pagination object-->
     <!--endpoint: 视图函数名(EG. post())-->
   {% macro render_pagination(pagination, endpoint) %}
-    <nav>
+    <nav style="text-align:right;">
       <ul class="pagination">
         <li>
             <!--分页，是否有前面页码-->
         {% if pagination.has_prev %}
           <a href="{{ url_for('home', page=pagination.prev().page) }}"
              aria-label="Previous">
-          </a>
         {% else %}
           <a href="{{ url_for('home', page=1) }}" aria-label="Previous">
         {% endif %}
@@ -63,7 +68,6 @@
       base body
     {% endblock %}
   </div>
-  <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
 </body>
 </html>
