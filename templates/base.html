@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
   <!-- Macro: `render paginate` -->
     <!--定义宏-->
+    <!--agination: SQLAlchemy 的分页对象 flask_sqlalchemy.Pagination object-->
+    <!--endpoint: 视图函数名(EG. post())-->
   {% macro render_pagination(pagination, endpoint) %}
     <nav>
       <ul class="pagination">
@@ -57,7 +59,7 @@
         <p>Welcome to the blog!</p>
     </div>
     {% block body %}
-        body_content
+      base body
     {% endblock %}
   </div>
   <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>

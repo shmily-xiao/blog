@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 from flask import Flask
+
 from config import DevConfig
+import wt_forms
 
 # 告诉Flask这是入口有点像是java的@controller效果
 app = Flask(__name__)
