@@ -3,10 +3,11 @@
 
 from flask import render_template
 from sqlalchemy import func
+import datetime
 
 from main import app
 from models import db, User, Post, Tag, Comment, posts_tags
-
+from wt_forms import CommentForm
 
 # 1.获取主要的数据表对象, EG. posts
 # 2.获取与该表由关联的数据表对象, EG. posts 与 comments 是 one to many 的关系,
@@ -48,13 +49,27 @@ def home(page=1):
                            top_tags=top_tags)
 
 
-@app.route('/post/<int:post_id>')
+@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def post(post_id):
     """View function for post page"""
+    # Form object:'Comment'
+    form = CommentForm()
+    # form.validate_on_submit() will be true and return the
+    # data object to form instance from user enter
+    # when the HTTP request is POST
+    # form.validata_on_submit() 方法会隐式的判断该 HTTP 请求是不是 POST,
+    # 若是, 则将请求中提交的表单数据对象传入上述的 form 对象并进行数据检验.
+    if form.validate_on_submit():
+        new_comment = Comment(name=form.name.data)
+        new_comment.text = form.text.data
+        new_comment.data = datetime.datetime.now()
+        new_comment.post_id = post_id
+        db.session.add(new_comment)
+        db.session.commit()
 
     post = db.session.query(Post).get_or_404(post_id)
     tags = post.tags
-    comments = post.comment.order_by(Comment.date.desc()).all()
+    comments = post.comments.order_by(Comment.date.desc()).all()
     recent, top_tags = sidebar_data()
 
     return render_template('post.html',
@@ -62,7 +77,8 @@ def post(post_id):
                            tags=tags,
                            comments=comments,
                            recent=recent,
-                           top_tags=top_tags)
+                           top_tags=top_tags,
+                           form=form)
 
 
 @app.route('/tag/<string:tag_name>')

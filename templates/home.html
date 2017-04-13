@@ -5,9 +5,8 @@
 {% block body %}
 <!-- The data object from view function: `home()` -->
 <div class="row">
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
-      <div class="col-lg-9">
+
+      <div class="col-md-9">
         <!-- Get Pagination object-->
         {% for post in posts.items %}
         <div class="row">
@@ -24,7 +23,8 @@
         </div>
         {% endfor %}
       </div>
-      <div class="col-lg-3">
+
+      <div class="col-md-3">
         <div class="row">
           <h5>Recent Posts</h5>
           <ul>
@@ -43,8 +43,7 @@
           </ul>
         </div>
       </div>
-    </div>
-    <div class="col-md-1"></div>
+    
   <!-- Call the Macro: `render_pagination` from base.html -->
   {{ render_pagination(posts, 'home') }}
 </div>

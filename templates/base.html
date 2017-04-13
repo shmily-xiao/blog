@@ -20,6 +20,7 @@
         {% if pagination.has_prev %}
           <a href="{{ url_for('home', page=pagination.prev().page) }}"
              aria-label="Previous">
+          </a>
         {% else %}
           <a href="{{ url_for('home', page=1) }}" aria-label="Previous">
         {% endif %}
