@@ -1,13 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from flask.ext.sqlalchemy import SQLAlchemy
-from main import app
+
+from blog.extensions import bcrypt
 
 # init the sqlalchemy object
 # will be load the SQLALCHEMY_DATABASE_URL from config.py
 # SQLAlchemy 会自动的从app对象中的DevConfig 中加载连接数据库的配置项
 # db 是 class SQLAlchemy 的实例化对象, 包含了 SQLAlchemy 对数据库操作的支持类集.
-db = SQLAlchemy(app)
+# db = SQLAlchemy(app)
+# 上面是重构之前的
+# 重构之后
+# 在 blog/__init__.py 中再初始化 db 对象
+db = SQLAlchemy()
+
+# 关联表，表示多对多的关系
+# 实际上 db.Table 对象对数据库的操作比 db.Model 更底层一些。
+# 后者是基于前者来提供的一种对象化包装，表示数据库中的一条记录。
+# posts_tags 表对象之所以使用 db.Table 不使用 db.Model 来定义，
+# 是因为我们不需要对 posts_tags (self.name)进行直接的操作(不需要对象化)，
+# posts_tags 代表了两张表之间的关联，会由数据库自身来进行处理。
+posts_tags = db.Table('posts_tags',
+                      db.Column('post_id', db.INTEGER, db.ForeignKey('posts.id')),
+                      db.Column('tag_id', db.INTEGER, db.ForeignKey('tags.id')))
 
 
 # 我们每在 models.py 中新定义一个数据模型, 都需要在 manager.py 中导入并添加到返回 dict 中.
@@ -49,7 +64,7 @@ class User(db.Model):
         print 'user id, username, password __init__ is run'
         self.id = id
         self.username = username
-        self.password = password
+        self.password = self.set_password(password)
 
     # 该方法返回一个对象的 字符串表达式. 与 __str__() 不同, __repr__返回的是字符串表达式, 能被 eval() 处理
     # __str__返回的是字符串, 不能被 eval() 处理得到原来的对象, 但与 print 语句结合使用时, 会被默认调用.
@@ -62,15 +77,11 @@ class User(db.Model):
         print 'user __repr__ is run'
         return "<Model User '{}'>".format(self.username)
 
-# 关联表，表示多对多的关系
-# 实际上 db.Table 对象对数据库的操作比 db.Model 更底层一些。
-# 后者是基于前者来提供的一种对象化包装，表示数据库中的一条记录。
-# posts_tags 表对象之所以使用 db.Table 不使用 db.Model 来定义，
-# 是因为我们不需要对 posts_tags (self.name)进行直接的操作(不需要对象化)，
-# posts_tags 代表了两张表之间的关联，会由数据库自身来进行处理。
-posts_tags = db.Table('posts_tags',
-                      db.Column('post_id', db.INTEGER, db.ForeignKey('posts.id')),
-                      db.Column('tag_id', db.INTEGER, db.ForeignKey('tags.id')))
+    def set_password(self, password):
+        return bcrypt.generate_password_hash(password)
+
+    def check_password(self, password):
+        return bcrypt.generate_password_hash(self.password, password)
 
 
 # 我们还需要在父表类 User 中定义出这种 one to many 的关系

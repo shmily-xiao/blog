@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import random
 import datetime
+import random
 
-from models import db, User, Tag, Post
+from blog.models import db, User, Tag, Post
 
 user = User(id=1, username='shmily', password='qazwsx')
 db.session.add(user)

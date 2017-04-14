@@ -11,7 +11,7 @@
 {{ post.text }}
   <h3>New Comment:</h3>
   <!-- Set the form -->
-  <form method="POST" action="{{ url_for('post', post_id=post.id) }}">
+  <form method="POST" action="{{ url_for('blog.post', post_id=post.id) }}">
       <!--form.hidden_tag(): 提供了预防跨站请求伪造的机制, 常用于表单页-->
     {{ form.hidden_tag() }}
     <div>
