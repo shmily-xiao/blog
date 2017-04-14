@@ -6,7 +6,7 @@ import random
 
 from blog.models import db, User, Tag, Post
 
-user = User(id=1, username='shmily', password='qazwsx')
+user = User(username='shmily', password='qazwsx')
 db.session.add(user)
 db.session.commit()
 

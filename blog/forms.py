@@ -1,8 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from flask_wtf import Form
-from wtforms import StringField, TextField, TextAreaField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, EqualTo, URL
+from wtforms import (
+    StringField,
+    TextField,
+    TextAreaField,
+    PasswordField,
+    BooleanField,
+    ValidationError
+)
+
+from blog.models import User
 
 
 # 表单类需要继承 Flask WTF 扩展提供的 Form 类
@@ -19,6 +28,50 @@ class CommentForm(Form):
         'Name',
         validators=[DataRequired(), Length(max=20)]
     )
-
-    # text = StringField(u'Comment', validators=[DataRequired()])
     text = TextAreaField(u'Comment', validators=[DataRequired()])
+
+
+class LoginForm(Form):
+    """Login Form."""
+    username = StringField('Username', validators=[DataRequired(), Length(max=255)])
+    password = PasswordField('Password', validators=[DataRequired])
+
+    def validate(self):
+        """Validartor for check the account information"""
+        check_validate = super(LoginForm, self).validate()
+        # super 是父类的方法，对父类的方法的重写
+        if not check_validate:
+            return False
+
+        user = User.query.filter_by(username=self.username.data).first()
+        if not user:
+            self.username.errors.append('Invalid username or password.')
+            return False
+
+        # Check the password whether right.
+        if not user.check_password(self.password.data):
+            # self.password.errors.append('Invalid username or password')
+            self.username.errors.append('Invalid username or password')
+            return False
+
+class RegisterForm(Form):
+    """Register Form."""
+    username = StringField('Username', validators=[DataRequired(), Length(max=255)])
+    password = PasswordField('Password', validators=[DataRequired])
+    # or confirm ??
+    comfirm = PasswordField('Confirm Password', validators=[DataRequired, EqualTo('password')])
+
+    def validate(self):
+        check_validate = super(RegisterForm, self).validate()
+
+        # If validator no pass
+        if not check_validate:
+            return False
+
+        # Check the user Whether already exist;
+        user = User.query.filter_by(username=self.username.data).first()
+
+        if user:
+            self.username.errors.append('User with that name already exists.')
+            return False
+        return True
