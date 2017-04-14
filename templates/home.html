@@ -10,12 +10,12 @@
         <!-- Get Pagination object-->
         {% for post in posts.items %}
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-md-12">
             <h1>{{ post.title }}</h1>
           </div>
         </div>
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-md-12">
             {{ post.text | truncate(255) | safe }}
             <!-- Set the link for read more -->
             <a href="{{ url_for('post', post_id=post.id) }}">Read More</a>
@@ -43,8 +43,8 @@
           </ul>
         </div>
       </div>
-    
-  <!-- Call the Macro: `render_pagination` from base.html -->
-  {{ render_pagination(posts, 'home') }}
+
 </div>
+    <!-- Call the Macro: `render_pagination` from base.html -->
+  {{ render_pagination(posts, 'home') }}
 {% endblock %}

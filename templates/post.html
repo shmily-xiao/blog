@@ -3,11 +3,12 @@
 
 <!-- Replace the BODY of template base.html -->
 {% block body %}
+
+
+<div class="col-md-12">
 <h3>{{ post.title }}</h3>
 {{ post.publish_date }}:
 {{ post.text }}
-
-<div class="col-lg-12">
   <h3>New Comment:</h3>
   <!-- Set the form -->
   <form method="POST" action="{{ url_for('post', post_id=post.id) }}">
@@ -33,7 +34,7 @@
           <p class="help-block">{{ e }}</p>
         {% endfor %}
       {% endif %}
-      {{ form.text(class_='form-control') }}
+      {{ form.text(class_='form-control',rows=15) }}
     </div>
     <input class="btn btn-primary" type="submit" value="Add Comment">
   </form>

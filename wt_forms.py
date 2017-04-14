@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from flask_wtf import Form
-from wtforms import StringField, TextField
+from wtforms import StringField, TextField, TextAreaField
 from wtforms.validators import DataRequired, Length
 
 
@@ -21,4 +21,4 @@ class CommentForm(Form):
     )
 
     # text = StringField(u'Comment', validators=[DataRequired()])
-    text = TextField(u'Comment', validators=[DataRequired()])
+    text = TextAreaField(u'Comment', validators=[DataRequired()])
