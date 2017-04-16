@@ -1,13 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from flask import render_template
-from sqlalchemy import func
 import datetime
+from os import path
 
-from main import app
-from models import db, User, Post, Tag, Comment, posts_tags
-from wt_forms import CommentForm
+from flask import render_template, Blueprint
+from sqlalchemy import func
+
+from blog.models import db, User, Post, Tag, Comment, posts_tags
+from blog.forms import CommentForm
+
+# 定义蓝图类似于java的controller
+blog_blueprint = Blueprint(
+    'blog',
+    __name__,
+    # path.pathdir ==> ..
+    template_folder=path.join(path.pardir, 'templates', 'blog'),
+    # Prefix of Route URL
+    url_prefix='/blog'
+)
+
 
 # 1.获取主要的数据表对象, EG. posts
 # 2.获取与该表由关联的数据表对象, EG. posts 与 comments 是 one to many 的关系,
@@ -32,8 +44,8 @@ def sidebar_data():
 
 # 指定 URL='/' 的路由规则
 # 当访问 HTTP://server_ip/ GET(Default) 时，call home()
-@app.route('/')
-@app.route('/<int:page>')
+@blog_blueprint.route('/')
+@blog_blueprint.route('/<int:page>')
 def home(page=1):
     """View function for home page"""
 
@@ -49,7 +61,7 @@ def home(page=1):
                            top_tags=top_tags)
 
 
-@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
+@blog_blueprint.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def post(post_id):
     """View function for post page"""
     # Form object:'Comment'
@@ -81,7 +93,7 @@ def post(post_id):
                            form=form)
 
 
-@app.route('/tag/<string:tag_name>')
+@blog_blueprint.route('/tag/<string:tag_name>')
 def tag(tag_name):
     """View function for tag page"""
     tag = db.session.query(Tag).filter_by(title=tag_name).first_or_404()
@@ -95,7 +107,7 @@ def tag(tag_name):
                            top_tags=top_tags)
 
 
-@app.route('/user/<string:username>')
+@blog_blueprint.route('/user/<string:username>')
 def user(username):
     """View function for user page"""
 
