@@ -12,7 +12,8 @@ main_blueprint = Blueprint(
     'main',
     __name__,
     # path.join( 'template/main')
-    template_folder=path.join(path.pardir, 'template', 'main')
+    template_folder=path.join(path.pardir, 'template', 'main'),
+    url_prefix='/main'
 )
 
 
@@ -28,8 +29,10 @@ def login():
     # LoginForm.validate() 会被执行
     form = LoginForm()
 
+    print ("*********************login*******************")
+
     if form.validate_on_submit():
-        flash('You hava been logged in.', category="success")
+        flash('You have been logged in.', category="success")
         return redirect(url_for("blog.home"))
     return render_template('login.html',
                            form=form)

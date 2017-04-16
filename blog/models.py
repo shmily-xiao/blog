@@ -61,7 +61,7 @@ class User(db.Model):
     #     self.username = username
 
     def __init__(self, username, password):
-        print 'user id, username, password __init__ is run'
+        print 'user username, password __init__ is run'
         self.username = username
         self.password = self.set_password(password)
 

@@ -4,11 +4,11 @@
 import datetime
 from os import path
 
-from flask import render_template, Blueprint
+from flask import render_template, Blueprint, url_for, redirect
 from sqlalchemy import func
 
 from blog.models import db, User, Post, Tag, Comment, posts_tags
-from blog.forms import CommentForm
+from blog.forms import CommentForm, PostForm
 
 # 定义蓝图类似于java的controller
 blog_blueprint = Blueprint(
@@ -123,7 +123,39 @@ def user(username):
                            top_tags=top_tags)
 
 
+@blog_blueprint.route('/new', methods=['GET', 'POST'])
+def new_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        new_post = Post(title=form.title.data)
+        new_post.text = form.text.data
+        new_post.publish_date = datetime.datetime.now()
+
+        db.session.add(new_post)
+        db.session.commit()
+
+        return redirect(url_for('blog.home'))
+    return render_template('new_post.html',
+                           form=form)
 
 
+@blog_blueprint.route('/edit/<int:id>', methods=['GET', 'POST'])
+def edit_post(id):
+    post = Post.query.get_or_404(id)
+    form = PostForm()
+
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.text = form.text.data
+        post.publish_date = datetime.datetime.now()
+
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('blog.post', post_id=post.id))
+    form.title.data = post.title
+    form.text.data = post.text
+    return render_template('edit_post.html',
+                           form=form,
+                           post=post)
 
 

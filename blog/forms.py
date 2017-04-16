@@ -38,10 +38,11 @@ class LoginForm(Form):
 
     def validate(self):
         """Validartor for check the account information"""
-        check_validate = super(LoginForm, self).validate()
+        print "********************LoginForm validate******************"
+        # check_validate = super(LoginForm, self).validate()
         # super 是父类的方法，对父类的方法的重写
-        if not check_validate:
-            return False
+        # if not check_validate:
+        #     return False
 
         user = User.query.filter_by(username=self.username.data).first()
         if not user:
@@ -53,6 +54,9 @@ class LoginForm(Form):
             # self.password.errors.append('Invalid username or password')
             self.username.errors.append('Invalid username or password')
             return False
+
+        return True
+
 
 class RegisterForm(Form):
     """Register Form."""
@@ -74,4 +78,11 @@ class RegisterForm(Form):
         if user:
             self.username.errors.append('User with that name already exists.')
             return False
+
         return True
+
+
+class PostForm(Form):
+    """Post form"""
+    title = StringField('Title', [DataRequired(), Length(max=255)])
+    text = TextAreaField('Blog Content', [DataRequired])

@@ -6,6 +6,7 @@ from flask import Flask, redirect, url_for
 from config import DevConfig
 from blog.models import db
 from blog.controllers import blogs
+from blog.controllers import main
 from blog.extensions import bcrypt
 
 
@@ -46,6 +47,7 @@ def create_app(object_name):
     # 将新建的蓝图对象 blog_blueprint 注册到 app 中
     # 每次新建一个蓝图都需要在这里添加一个
     app.register_blueprint(blogs.blog_blueprint)
+    app.register_blueprint(main.main_blueprint)
 
     # if __name__ == '__main__':
     #     # Entry the application
