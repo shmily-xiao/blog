@@ -152,6 +152,7 @@ def edit_post(id):
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('blog.post', post_id=post.id))
+
     form.title.data = post.title
     form.text.data = post.text
     return render_template('edit_post.html',
