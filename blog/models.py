@@ -81,7 +81,16 @@ class User(db.Model):
         return bcrypt.generate_password_hash(password)
 
     def check_password(self, password):
-        return bcrypt.generate_password_hash(self.password, password)
+        return bcrypt.check_password_hash(self.password, password)
+
+    # def is_authenticated(self):
+    #     """Check the user whether logged in."""
+    #
+    #     # Check the User's instance whether Class AnonymousUserMixin's instance.
+    #     if isinstance(self, AnonymousUserMixin):
+    #         return False
+    #     else:
+    #         return True
 
 
 # 我们还需要在父表类 User 中定义出这种 one to many 的关系

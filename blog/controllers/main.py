@@ -3,7 +3,8 @@
 
 from os import path
 
-from flask import flash, url_for, redirect, render_template, Blueprint
+from flask import flash, url_for, redirect, render_template, Blueprint , session
+from flask.ext.login import login_required, current_user, login_user
 from blog.forms import LoginForm, RegisterForm
 
 from blog.models import db, User
@@ -32,6 +33,16 @@ def login():
     print ("*********************login*******************")
 
     if form.validate_on_submit():
+        # Using session to check the user's login status
+        # Add the user's name to cookie.
+        # session['username'] = form.username.data
+
+        user = User.query.filter_by(username=form.username.data).one()
+
+        # login_user(user)
+        session['username'] = user.username
+        session['user_id'] = user.id
+
         flash('You have been logged in.', category="success")
         return redirect(url_for("blog.home"))
     return render_template('login.html',
@@ -63,5 +74,7 @@ def logout():
     """View function for logout"""
 
     flash('You have been logged out.', category="success")
+    session['username'] = None
+    session['user_id'] = None
     return redirect(url_for('blog.home'))
 

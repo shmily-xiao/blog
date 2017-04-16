@@ -4,7 +4,8 @@
 import datetime
 from os import path
 
-from flask import render_template, Blueprint, url_for, redirect
+from flask import render_template, Blueprint, url_for, redirect, session
+from flask.ext.login import login_required, current_user
 from sqlalchemy import func
 
 from blog.models import db, User, Post, Tag, Comment, posts_tags
@@ -126,6 +127,10 @@ def user(username):
 @blog_blueprint.route('/new', methods=['GET', 'POST'])
 def new_post():
     form = PostForm()
+
+    if not session.get('username'):
+        return redirect(url_for('main.login'))
+
     if form.validate_on_submit():
         new_post = Post(title=form.title.data)
         new_post.text = form.text.data

@@ -34,7 +34,7 @@ class CommentForm(Form):
 class LoginForm(Form):
     """Login Form."""
     username = StringField('Username', validators=[DataRequired(), Length(max=255)])
-    password = PasswordField('Password', validators=[DataRequired])
+    password = PasswordField('Password', validators=[DataRequired()])
 
     def validate(self):
         """Validartor for check the account information"""
@@ -45,14 +45,15 @@ class LoginForm(Form):
         #     return False
 
         user = User.query.filter_by(username=self.username.data).first()
+        self.username.errors = list(self.username.errors)
+        self.password.errors = list(self.password.errors)
         if not user:
             self.username.errors.append('Invalid username or password.')
             return False
 
         # Check the password whether right.
         if not user.check_password(self.password.data):
-            # self.password.errors.append('Invalid username or password')
-            self.username.errors = list(self.username.errors).append('Invalid username or password')
+            self.password.errors.append('Invalid username or password')
             return False
 
         return True
@@ -61,9 +62,9 @@ class LoginForm(Form):
 class RegisterForm(Form):
     """Register Form."""
     username = StringField('Username', validators=[DataRequired(), Length(max=255)])
-    password = PasswordField('Password', validators=[DataRequired])
+    password = PasswordField('Password', validators=[DataRequired()])
     # or confirm ??
-    comfirm = PasswordField('Confirm Password', validators=[DataRequired, EqualTo('password')])
+    comfirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
 
     def validate(self):
         check_validate = super(RegisterForm, self).validate()
@@ -85,4 +86,4 @@ class RegisterForm(Form):
 class PostForm(Form):
     """Post form"""
     title = StringField('Title', [DataRequired(), Length(max=255)])
-    text = TextAreaField('Blog Content', [DataRequired])
+    text = TextAreaField('Blog Content', [DataRequired()])
