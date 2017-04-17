@@ -9,22 +9,35 @@
 <h3>{{ post.title }}</h3>
 
 <div class="row">
-  <div class="col-lg-6">
+  <div class="col-md-6">
     <p>Written By <a href="{{ url_for('blog.user', username=post.users.username)
       }}">{{ post.users.username }}</a> on {{ post.publish_date }}</p>
     <p>{{ post.text | safe }}</p>
   </div>
   <div class="column">
-    <div class="col-lg-2">
+    <div class="col-md-2">
       <a href="{{ url_for('blog.new_post') }}" class="btn btn-primary">New</a>
     </div>
   </div>
   <div class="column">
-    <div class="col-lg-2">
+    <div class="col-md-2">
       <a href="{{ url_for('blog.edit_post', id=post.id) }}" class="btn btn-primary">Edit</a>
     </div>
   </div>
 </div>
+<h3>Old Comments:</h3>
+<div class="row">
+    {% for comment in comments %}
+     <div class="column">
+         <div class="col-md-12" style=" border: 1px solid rgba(129, 138, 135, 0.57); margin-top: 6px;">
+            <p>title: {{ comment.name | safe }}</p>
+            <p> text: {{ comment.text | safe }}</p>
+         </div>
+    </div>
+    {% endfor %}
+
+</div>
+
 
   <h3>New Comment:</h3>
   <!-- Set the form -->

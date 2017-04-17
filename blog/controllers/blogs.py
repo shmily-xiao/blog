@@ -75,7 +75,7 @@ def post(post_id):
     if form.validate_on_submit():
         new_comment = Comment(name=form.name.data)
         new_comment.text = form.text.data
-        new_comment.data = datetime.datetime.now()
+        new_comment.date = datetime.datetime.now()
         new_comment.post_id = post_id
         db.session.add(new_comment)
         db.session.commit()
@@ -95,14 +95,15 @@ def post(post_id):
 
 
 @blog_blueprint.route('/tag/<string:tag_name>')
-def tag(tag_name):
+@blog_blueprint.route('/tag/<string:tag_name>/<int:page>')
+def tag(tag_name, page=1):
     """View function for tag page"""
-    tag = db.session.query(Tag).filter_by(title=tag_name).first_or_404()
-    posts = tag.posts.order_by(Post.publish_date.desc()).all()
+    tags = db.session.query(Tag).filter_by(name=tag_name).first_or_404()
+    posts = tags.posts.order_by(Post.publish_date.desc()).paginate(page, 10000)
     recent, top_tags = sidebar_data()
 
-    return render_template('tag.html',
-                           tag=tag,
+    return render_template('home.html',
+                           tag=tags,
                            posts=posts,
                            recent=recent,
                            top_tags=top_tags)
@@ -135,6 +136,7 @@ def new_post():
         new_post = Post(title=form.title.data)
         new_post.text = form.text.data
         new_post.publish_date = datetime.datetime.now()
+        new_post.user_id = session.get('user_id')
 
         db.session.add(new_post)
         db.session.commit()
