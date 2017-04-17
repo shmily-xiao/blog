@@ -4,7 +4,7 @@
 from os import path
 
 from flask import flash, url_for, redirect, render_template, Blueprint , session
-from flask.ext.login import login_required, current_user, login_user
+# from flask.ext.login import login_required, current_user, login_user
 from blog.forms import LoginForm, RegisterForm
 
 from blog.models import db, User

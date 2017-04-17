@@ -5,7 +5,7 @@ import datetime
 from os import path
 
 from flask import render_template, Blueprint, url_for, redirect, session
-from flask.ext.login import login_required, current_user
+# from flask.ext.login import login_required, current_user
 from sqlalchemy import func
 
 from blog.models import db, User, Post, Tag, Comment, posts_tags
@@ -146,8 +146,11 @@ def new_post():
 
 @blog_blueprint.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_post(id):
-    post = Post.query.get_or_404(id)
+
     form = PostForm()
+    if not session.get('username'):
+        return redirect(url_for('main.login'))
+    post = Post.query.get_or_404(id)
 
     if form.validate_on_submit():
         post.title = form.title.data

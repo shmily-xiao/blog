@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from flask.ext.bcrypt import Bcrypt
-from flask.ext.login import LoginManager
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
 
 
 # Create the Flask-Bcrypt's instance
