@@ -7,6 +7,7 @@ from flask_login import LoginManager
 
 # Create the Flask-Bcrypt's instance
 # 以后所有的扩展都会在这里
+# 所以这里我们使用 Bcrypt 哈希算法，这是一种被刻意设计成抵消且缓慢的哈希计算方式，从而极大的加长了暴力破解的时间和成本，以此来保证安全性。
 bcrypt = Bcrypt()
 
 # Create the Flask-Login's instance

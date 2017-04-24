@@ -35,6 +35,7 @@ def create_app(object_name):
     # Will be load the SQLALCHEMY_DATABASE_URL from config.py to db object
     db.init_app(app)
     # Init the Flask-Bcryt via app object
+    # 所以这里我们使用 Bcrypt 哈希算法，这是一种被刻意设计成抵消且缓慢的哈希计算方式，从而极大的加长了暴力破解的时间和成本，以此来保证安全性。
     bcrypt.init_app(app)
 
 
